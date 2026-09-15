@@ -13,6 +13,14 @@ Existing leave-drug-out architectures based on ScPerturBench:
 5. CycleCDR
 6. BaseMLP
 
+Existing drug embedding models we want to ablate:
+1. CLAMP 
+2. ??? 
+3. ??? 
+
+Our informal idealized pipeline: \
+$drug\_representation \rightarrow f(.) + untreated\_cell = proposed\_generated\_cell$
+
 
 | Date | Event | Description |
 | :--- | :--- | :--- |
