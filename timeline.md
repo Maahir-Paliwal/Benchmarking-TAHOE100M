@@ -16,11 +16,10 @@ Existing leave-drug-out architectures based on ScPerturBench:
 
 | Date | Event | Description |
 | :--- | :--- | :--- |
-| **Sep 16th - Sep **30th**** | Background Research | Read ScPerturBench + Background Knowledge |
-| **1983** | Discover | Search for other similar benchmarking papers |
-| **1991** | Research Metrics| Tim Berners-Lee opens the WWW to the public. |
-| **1991** | Pre-process TAHOE100M dataset | Tim Berners-Lee opens the WWW to the public. |
-| **1991** | Implement models | Implement the proposed existing architectures alongside CLAMP + One other drug embedding |
+| **Sep 16th - Sep 22nd** | Background Research | Read ScPerturBench + Background Knowledge |
+| **Sep 23rd - Oct 6th** | Discover + Research Metrics | Search for other similar benchmarking papers + research / understand the evaluation metrics we are going for|
+| **Oct 7th - Oct 20th** | Pre-process TAHOE100M dataset | Filtering for HVGs, any preprocessing |
+| **Oct 21 - Dec 2nd** | Implement models | Implement the proposed existing architectures alongside CLAMP + One other drug embedding |
 
 
 
