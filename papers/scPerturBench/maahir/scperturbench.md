@@ -141,4 +141,16 @@ All current methods exhibited poor generalizability, especially when predicting 
 
 ## Drug Embeddings Techniques
 
-**TODO**
+* **CPA**:
+  * This model is generic in dimensionality. We can ablate different drug embedding options. 
+* **biolord**:
+  * In the experiment they use RDKit-2D embedding: $SMILES \rightarrow predefined \; chemical \; descriptors \rightarrow [d_1, ..., d_k]$
+  * However, biolord may take any drug embedding style as input. Specifically, the size can vary across different models (vector of size 512 for model A, vector of size 256 for model B). 
+  * Drawbacks to the RDKit-2D + FF layers: we do not inject architectural bias regarding the drug's graph chemical structure.  
+  * Note that in Biolord, we learn a special latent vector for every cell. This means at inference time, we cannot use a new cell as input, it must be one of the old cells. 
+* **chemCPA**: 
+  * We can use any drug embedding model
+* PRnet: Uses a rigid pipeline:
+  * $SMILES \rightarrow RDKit \; FCFP4 \;  fingerprint \rightarrow dose \; multiplication \rightarrow 2 \; layer \; FF \; net \rightarrow z \in \mathbb{R}^{64}$
+  * Importantly, you could use a different embedding pipeline and simply pass it to the FF Net to result in the same 64 dim vector. 
+* CycleCDR: The code is updatable such that we can use different embeddings, however, we will have to add linear projections with MLPs. The expected drug embedding size is fixed. In the paper, they use a GAT that produces a vector $z_d \in \mathbb{R}^{128}$. We must respect this 128 dimension constraint. The code itself is modular and the drug encoder is abstracted such that we do not care how the architecture for the encoder looks, we just expect a 128 dimensional vector. 
