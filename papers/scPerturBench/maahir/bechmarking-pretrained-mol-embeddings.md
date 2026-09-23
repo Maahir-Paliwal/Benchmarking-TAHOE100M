@@ -147,12 +147,42 @@ AUROC was used as an evaluation metric. It is well-suited for imbalanced dataset
 
 Since this benchmarking problem concerns multiple models on multiple datasets, then aggregated metrics alone like AUROC and mean-rank are insufficient. Instead, Bayesian testing is recommended for this settings. Bayesian procedures return the posterior probability that one model is better another and all explicit probability statements about practical equivalence. Bayesian tests model $P(i \succ j)$, the posterior predictive probability: "the probability that model i beats model j". Further, the notion of ROPE allows returning a tie. 
 
-Specifically, this paper uses the hierarchical Bayesian Bradley-Terry (BBT)model 
+Specifically, this paper uses the hierarchical Bayesian Bradley-Terry (BBT) model:
 
+#### Bradley-Terry (BBT) model
+
+**Pairwise Win Counts**: Let $W_{ij}$ be the number of datasets on which model i outperforms model j in a given metric, e.g., AUROC. If this difference is too small, e.g., 1% these models are deemed practically equivalent. We denote the total number of comparisons $N_{ij} = W_{ij} + W_{ji}$
+
+**Likelihood**: The win counts are modeled with a binomial Bradley-Terry Likelihood
+
+**Continue looking into this for further understanding of Bayesian Testing!!! This information is however unnecessary in the comprehension of the results.**
 
 
 ## Results 
 
+**Only four models outperformed the ECFP fingerprint**. CLAMP performed the best, R-MAT, MolBERT, and ChemBERTa use distinct architectures and training strategies. Noted that MTR variant vastly outperformed the MLM variant in all cases. 
 
+Among the worst performing models, most are message-passing GNNs. SELFIES-based text transformers also ranked among the weakest performers
 
-## Conclusions
+CLAMP
+| Model | Mean rank $\downarrow$ | Mean AUROC $\uparrow$ |
+| :--- | :--- | :--- |
+| **CLAMP** | 5.40 | 82.55% |
+| **R-MAT** | 6.08 | 80.83% |
+| **MolBERT** | 6.92 | 80.51% |
+| **ChemBERTa** | 7.32 | 79.99% |
+| **ECFP** | 7.52 | 79.89% |
+
+Under BBT, R-MAT, MolBERT, ChemBERTa, CDDD, Atom Pair, MAT are equivalent. 
+
+These results show that only the CLAMP model is statistically significantly better than ECFP. 
+
+**Inter-model win rates** Figure 2 shows win rates between models. Models are ranked by their number of wins against the ECFP baseline. To exclude signficant differences, they treated AUROC differences below 0.01% as ties
+
+On 5 datasets, no models outperformed ECFP. 
+
+## Discussion
+
+1. Always use ECFP count fingerprint as a baseline, paired with a tree-based classifier. Ideally, test other fingerprints like Atom Pair. 
+2. Consider CLAMP model
+3. Other notable models are R-MAT, MolBERT, ChemBERTa, and CDDD
