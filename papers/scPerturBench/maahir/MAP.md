@@ -3,6 +3,8 @@
 ## Terminology
 
 * Control-state cell embeddings: The cell before the drug is applied. 
+* Gene Set Enrichment Analysis (GSEA): $\text{control cell state} + \text{held out drug} \rightarrow \text{predicted perturbation cell state}$. Then GSEA is run. it asks: Which biological pathways are predicted to be activated/suppressed by this drug?
+  * For example, if MAP predicts that many genes involved in cell proliferation go down together, GSEA may identify a proliferation-related pathway as suppressed. 
 
 ## Abstract
 
@@ -54,10 +56,64 @@ Then, they use the resulting knowlege encoders into a perturbation predictor bui
 
 ## Results
 
+### Evaluation Protocols
+
+1. **Zero-shot compositional generalization (unseen cell line-drug combos)**:
+- This is IID on combos (Drug A and Cell line B have been seen separately before)
+
+2. **Zero-shot prediction for unprofiled drugs**: leave drug-out. To avoid leakage, drugs are excluded from MapKG
+
+### Metrics 
+
+1. **Pearson-Delta Correlation**: defined as the Pearson Correlation between predicted and observed perturbation-induced expression changes (log-fold changes relative to control)
+2. **Direction Accuracy**: the fraction of genes whose predicted sign of regulation (up/down) relative to control matches the observed sign
+3. **Perturbation discrimination Score**: quantifies whether the predicted responses remain separable across different perturbation
+
+To mitigate single-cell measurement noise, all evaluations are performed at pseudobulk resolution by aggregating a fixed number of cells within each experimental context. 
 
 
-## Discussion
+### Baseline models
+
+CRISP, ChemCPA, PRnet, linear baseline, trainMean (predicts perturbation effects using mean responses form the training set)
+
+### Zero-shot Generalization Across Unseen Cell Line–Drug Combinations
+
+Keep in mind, one model is trained on 6 cell lines. 
+
+Q: How do they discern between cell lines in the input?
+A: The difference in gene expressions of cells in different cell lines suffices as difference enough. 
+
+- MAP significantly outperforms all baselines across metrics, achieving relative improvements over the best performing baseline. 
+
+#### Cell-line specific performance on TAHOE
+
+MAP experiences larger gains than CRISP and ChemCPA. CRISP and ChemCPA also improve substantially over the linear and trainMean baseline. 
+
+#### Generalization across datasets
+
+MAP consistently improves top-50 DEG Person delta Corr, top-50 DEG direction accuracy, and HVG perturbation on both datasets. 
+
+but note that **HVG perturbation discrimination scores are relatively low for all methods on these two datasets**
 
 
+### Zero-shot Generalization to Unprofiled Drugs
+
+more challenging regime: prediction for *unprofiled drugs*. 
+
+Map improves over baseline methods with +21% top-50 DEG direction accuracy, +12.2% top-50 DEG delta Pearson correlation, and +16.9% HVG perturbation discrimination score. 
+
+
+### Gene-level agreement for representative drugs
+
+To examine gene-level behaviour, they visualize the actual gene change $\delta_{real}$ vs $\delta_{predicted}$. In the ideal scenario, for each gene, we would have $\delta_{real} = \delta_{predicted}$. That would create a linear plot $y = x$. 
+
+Consistently, Pearson Delta Corr. is higher for MAP
+
+### Simulated in-silico drug screening
+
+GSEA tested by curating a set of disease-relevant pathways whose activity is desirable to suppress. For each drug, they compute pathway enrichment scores from the predicted transcriptional response and aggregate them across the curated pathways to obtain a drug-level downregulation score. 
 
 ## Methods
+
+- We may extract drug embeddings alone from this model as well as run the whole pipeline. 
+- Specifics on graph construction, multimodal pretraining, knowledge guided perturbation response prediction, and dataset descriptions are available here. 
